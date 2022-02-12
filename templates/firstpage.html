@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='template.css')}}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap');
+    </style>
+    <title>Document</title>
+</head>
+{% include "sidebar.html" %}
+<body>
+    <main>
+        <div class="header">
+            <p>Everything is personal, even this blog</p>
+            <h1>My personal Blog</h1>
+            <hr>
+            <div class="borders">
+                <div class="navigation">
+                    <ul class="menu_list">
+                        <li class="menu_item">
+                            <a href="" class="list_item">
+                                First item
+                            </a>
+                        </li>
+                        <li class="menu_item">
+                            <a href="">
+                                second item
+                            </a>
+                        </li>
+                        <li class="menu_item">
+                            <a href="">
+                                third item
+                            </a>
+                        </li>
+                        <li class="menu_item">
+                            <a href="">
+                                forth item
+                            </a>
+                        </li>
+                        <li class="menu_item">
+                            <input type="search" class="search_bar">
+                        </li>
+                    </ul>
+        
+                </div>
+            </div>
+            
+    
+        </div>
+
+    </main>
+    
+    
+</body>
+</html>

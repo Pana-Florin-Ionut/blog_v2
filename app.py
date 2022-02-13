@@ -5,6 +5,13 @@ from wtforms.validators import DataRequired
 
 app = Flask(__name__)
 
+app.config["SECRET_KEY"] = "mysupersecretkey"
+
+# create a form class
+class NameForm(FlaskForm):
+    name = StringField("What is your name!", validators=[DataRequired()])
+    submit = SubmitField("Submit")
+
 
 # @app.route("/")
 # def sidebar():
@@ -16,9 +23,15 @@ def first_page():
     return render_template("firstpage.html")
 
 
-@app.route("/forms")
+@app.route("/forms", methods=["GET", "POST"])
 def forms():
-    return render_template("form_template.html")
+    name = None
+    form = NameForm()
+    # Validate form
+    if form.validate_on_submit():
+        name = form.name.data
+        form.name.data = ""
+    return render_template("form_template.html", name=name, form=form)
 
 
 @app.errorhandler(404)

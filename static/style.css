@@ -9,6 +9,9 @@
 }
 
 body {
+  /* width: min(100%, 1900px); */
+  margin-inline: auto;
+
   color: black;
   background-color: white;
   margin: 0;
@@ -17,6 +20,8 @@ body {
 
 main {
   display: flex;
+  padding-left: 1rem;
+
   justify-content: center;
   align-items: center;
 }
@@ -189,6 +194,18 @@ body::-webkit-scrollbar-thumb {
   padding-left: 6rem;
   display: flex;
   align-content: center;
+}
+
+.form_label {
+  background-color: rgb(62, 226, 70);
+}
+
+.form_control {
+  background-color: royalblue;
+}
+
+.btn_submit {
+  background-color: red;
 }
 
 /* Small screens */

@@ -1,0 +1,53 @@
+{% include "firstpage.html" %}
+
+{% block content %}
+
+<h1>Hello</h1>
+
+<main>
+    
+
+    <br>
+    <div class="header">
+        <h1>Form Template - What's your name</h1>
+
+        
+
+        
+        <div>
+        {% if name %}
+            <h1>Hello {{ name }}!!</h1>
+        {% else %}
+            <h1>What's your name?</h1>
+            <br>
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                {{ form.name.label(class="form_label") }}
+                
+                {{ form.name(class="form_control") }}
+                <br>
+                {{ form.email.label(class="form_label") }}
+                
+                {{ form.email(class="form_control") }}
+
+                <br>
+                {{ form.submit(class="btn_submit") }}
+            </form>
+        
+        {% for our_user in our_users %}
+            {{ our_user.id }}. {{ our_user.name }} - {{ our_user.email }} <br>
+
+        {% endfor %}
+        {% endif %}
+
+        </div>
+    </div>
+
+    
+
+</main>
+    
+
+
+{% endblock %}

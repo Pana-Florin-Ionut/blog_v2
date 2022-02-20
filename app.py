@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash
+from flask import Flask, render_template, flash, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
@@ -20,6 +20,7 @@ app.config["SECRET_KEY"] = "mysupersecretkey"
 
 # initialize the database
 db = SQLAlchemy(app)
+
 
 # create model
 class Users(db.Model):
@@ -114,3 +115,28 @@ def add_user():
         flash("user added successfully successfully")
     our_users = Users.query.order_by(Users.date_added)
     return render_template("add_user.html", form=form, name=name, our_users=our_users)
+
+
+# update database record
+@app.route("/update/<int:id>", methods=["POST", "GET"])
+def update(id):
+    form = UserForm()
+    name_to_update = Users.query.get_or_404(id)
+    if request.method == "POST":
+        name_to_update.name = request.form[
+            "name"
+        ]  # almost the same as validation_on_submit
+        name_to_update.email = request.form["email"]
+        try:
+            db.session.commit()
+            flash("User update successfully!")
+            return render_template(
+                "update.html", form=form, name_to_update=name_to_update
+            )
+        except:
+            flash("Error")
+            return render_template(
+                "update.html", form=form, name_to_update=name_to_update
+            )
+    else:
+        return render_template("update.html", form=form, name_to_update=name_to_update)

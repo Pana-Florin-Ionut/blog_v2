@@ -16,7 +16,7 @@
             {% for our_user in our_users %}
             <tr>
                 <td>
-                    {{ our_user.id }}. {{ our_user.name }} - {{ our_user.email }}
+                    {{ our_user.id }}. {{ our_user.name }} - {{ our_user.email }} - {{ our_user.favorite_color }}
                 </td>
             </tr>
             {% endfor %}
@@ -35,7 +35,14 @@
                 {{ form.email(class="form_control", value=name_to_update.email) }}
 
                 <br>
+                {{ form.favorite_color.label(class="form_label") }}
+                
+                {{ form.favorite_color(class="form_control", value=name_to_update.favorite_color) }}
+
+                <br>
                 {{ form.submit(class="btn_submit") }}
+
+                <a href="{{ url_for('delete', id=id) }}" class="btn">Delete</a>
             </form>
             <br>
 

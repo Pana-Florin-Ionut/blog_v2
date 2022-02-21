@@ -2,6 +2,7 @@ from flask import Flask, render_template, flash, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -20,6 +21,7 @@ app.config["SECRET_KEY"] = "mysupersecretkey"
 
 # initialize the database
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 # create model
@@ -27,6 +29,7 @@ class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
+    favorite_color = db.Column(db.String(120))
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self) -> str:
@@ -43,6 +46,7 @@ class NameForm(FlaskForm):
 class UserForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
+    favorite_color = StringField("Favorite Color")
     submit = SubmitField("Submit")
 
 
@@ -106,12 +110,17 @@ def add_user():
         # if aren't
         if user is None:
             # add user to database
-            user = Users(name=form.name.data, email=form.email.data)
+            user = Users(
+                name=form.name.data,
+                email=form.email.data,
+                favorite_color=form.favorite_color.data,
+            )
             db.session.add(user)
             db.session.commit()
         name = form.name.data
         form.name.data = ""
         form.email.data = ""
+        form.favorite_color.data = ""
         flash("user added successfully successfully")
     our_users = Users.query.order_by(Users.date_added)
     return render_template("add_user.html", form=form, name=name, our_users=our_users)
@@ -127,6 +136,8 @@ def update(id):
             "name"
         ]  # almost the same as validation_on_submit
         name_to_update.email = request.form["email"]
+        name_to_update.favorite_color = request.form["favorite_color"]
+
         try:
             db.session.commit()
             flash("User update successfully!")
@@ -139,4 +150,27 @@ def update(id):
                 "update.html", form=form, name_to_update=name_to_update
             )
     else:
-        return render_template("update.html", form=form, name_to_update=name_to_update)
+        return render_template(
+            "update.html", form=form, name_to_update=name_to_update, id=id
+        )
+
+
+@app.route("/delete/<int:id>")
+def delete(id):
+    user_to_delete = Users.query.get_or_404(id)
+    name = None
+    form = UserForm()
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash("User deleted successfully")
+        our_users = Users.query.order_by(Users.date_added)
+        return render_template(
+            "add_user.html", form=form, name=name, our_users=our_users
+        )
+
+    except:
+        flash("Problem")
+        return render_template(
+            "add_user.html", form=form, name=name, our_users=our_users
+        )
